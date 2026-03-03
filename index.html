@@ -1,18 +1,205 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Animal Information Website</title>
-    <link rel="stylesheet" href="style.css">
+<title>Animal AI Encyclopedia</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family: 'Segoe UI', sans-serif;
+}
+
+body{
+background:#f4f7fa;
+transition:0.4s;
+}
+
+.dark{
+background:#121212;
+color:white;
+}
+
+nav{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 40px;
+background:#1e3c72;
+color:white;
+}
+
+nav input{
+padding:8px;
+width:220px;
+border-radius:20px;
+border:none;
+outline:none;
+}
+
+nav button{
+padding:8px 15px;
+border:none;
+background:#00c6ff;
+color:white;
+border-radius:20px;
+cursor:pointer;
+}
+
+.toggle{
+cursor:pointer;
+margin-left:15px;
+}
+
+.hero{
+height:80vh;
+background:url('https://source.unsplash.com/1600x900/?wildlife,nature') no-repeat center/cover;
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+color:white;
+}
+
+.hero h1{
+font-size:45px;
+background:rgba(0,0,0,0.6);
+padding:20px;
+border-radius:10px;
+}
+
+.section{
+padding:50px;
+text-align:center;
+}
+
+.categories{
+display:flex;
+justify-content:center;
+gap:20px;
+flex-wrap:wrap;
+margin-bottom:30px;
+}
+
+.categories button{
+padding:10px 20px;
+border:none;
+border-radius:20px;
+background:#1e3c72;
+color:white;
+cursor:pointer;
+}
+
+.result-card{
+max-width:800px;
+margin:auto;
+background:white;
+padding:25px;
+border-radius:15px;
+box-shadow:0 5px 20px rgba(0,0,0,0.1);
+transition:0.4s;
+}
+
+.dark .result-card{
+background:#1e1e1e;
+}
+
+.result-card img{
+width:100%;
+max-height:400px;
+object-fit:cover;
+border-radius:10px;
+margin-bottom:20px;
+}
+
+footer{
+text-align:center;
+padding:20px;
+background:#1e3c72;
+color:white;
+margin-top:40px;
+}
+</style>
 </head>
+
 <body>
 
-    <h1>Animal Information Website 🐾</h1>
+<nav>
+<h2>🐾 Animal AI Encyclopedia</h2>
 
-    <input type="text" id="animalInput" placeholder="Enter animal name">
-    <button onclick="searchAnimal()">Search</button>
+<div>
+<input type="text" id="searchInput" placeholder="Search any animal...">
+<button onclick="searchAnimal()">Search</button>
+<span class="toggle" onclick="toggleDark()">🌙</span>
+</div>
+</nav>
 
-    <div id="result"></div>
+<div class="hero">
+<h1>Explore The Animal Kingdom With AI</h1>
+</div>
 
-    <script src="script.js"></script>
+<div class="section">
+
+<h2>Browse Categories</h2>
+
+<div class="categories">
+<button onclick="searchAnimal('Lion')">Mammals</button>
+<button onclick="searchAnimal('Eagle')">Birds</button>
+<button onclick="searchAnimal('Snake')">Reptiles</button>
+<button onclick="searchAnimal('Dolphin')">Marine</button>
+</div>
+
+<div id="result"></div>
+
+</div>
+
+<footer>
+© 2026 Animal AI Encyclopedia | Made by Prashik
+</footer>
+
+<script>
+
+function toggleDark(){
+document.body.classList.toggle("dark");
+}
+
+async function searchAnimal(categoryAnimal){
+
+let animal = categoryAnimal || document.getElementById("searchInput").value;
+
+if(!animal){
+alert("Please enter animal name");
+return;
+}
+
+let response = await fetch(
+"https://en.wikipedia.org/api/rest_v1/page/summary/" + animal
+);
+
+if(response.status === 200){
+
+let data = await response.json();
+
+document.getElementById("result").innerHTML = `
+<div class="result-card">
+<img src="https://source.unsplash.com/800x500/?${animal},wildlife">
+<h2>${data.title}</h2>
+<p>${data.extract}</p>
+<h3>🧠 AI Quick Facts</h3>
+<p>This animal belongs to the natural wildlife ecosystem and plays an important role in maintaining ecological balance. Scientists study it to understand biodiversity and environmental adaptation.</p>
+</div>
+`;
+
+}else{
+document.getElementById("result").innerHTML =
+"<h3>Animal not found 😢 Try another name</h3>";
+}
+
+}
+
+</script>
+
 </body>
 </html>
